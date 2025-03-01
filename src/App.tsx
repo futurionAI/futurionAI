@@ -1,10 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
 import './App.css';
 import Contact from './Contact';
+import Projects from './Projects';
 
 // Main App Component
 const App: React.FC = () => {
+  // Effect to handle hash navigation
+  useEffect(() => {
+    // Check if there's a hash in the URL
+    if (window.location.hash) {
+      // Get the element ID from the hash
+      const id = window.location.hash.substring(1);
+      const element = document.getElementById(id);
+      
+      // If the element exists, scroll to it
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100); // Small delay to ensure the page is fully loaded
+      }
+    }
+  }, [window.location.hash]);
+
   return (
     <Router>
       <div className="app">
@@ -15,7 +33,7 @@ const App: React.FC = () => {
             <>
               <Hero />
               <Services />
-              <About />
+              <ProjectsWrapper />
               <CTA />
               <Footer />
             </>
@@ -29,13 +47,16 @@ const App: React.FC = () => {
 // Navbar Component
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  
+  const navigate = useNavigate();
   return (
     <nav className="navbar">
-      <div className="logo"><a href="/">FuturionAI</a></div>
+      <div onClick={() => {
+        navigate('/');
+        window.scrollTo(0, 0);
+      }} className="logo"/>
       <div className={`nav-links ${menuOpen ? 'active' : ''}`}>
-        <a href="#services">Services</a>
-        <a href="#about">About</a>
+        <a href="/#services ">Services</a>
+        <a href="/#projects-section">Projects</a>
         <Link to="/contact">Contact Us</Link>
       </div>
       <div className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
@@ -52,7 +73,6 @@ const Hero: React.FC = () => {
       <div className="hero-content">
         <h1>Futurion AI solutions</h1>
         <p>We simplify complex tech challenges</p>
-        <button className="primary-btn">Let's talk</button>
       </div>
     </section>
   );
@@ -98,28 +118,11 @@ const Services: React.FC = () => {
   );
 };
 
-// About Section Component
-const About: React.FC = () => {
+// Projects Section Component
+const ProjectsWrapper: React.FC = () => {
   return (
-    <section className="about" id="about">
-      <div className="about-content">
-        <h2>Why Choose Us</h2>
-        <p>We're not just tech experts – we're partners invested in your success.</p>
-        <div className="values">
-          <div className="value">
-            <h3>Human-First</h3>
-            <p>Technology should serve people, not the other way around.</p>
-          </div>
-          <div className="value">
-            <h3>No Jargon</h3>
-            <p>We communicate clearly without unnecessary tech-speak.</p>
-          </div>
-          <div className="value">
-            <h3>Real Solutions</h3>
-            <p>Practical results that make a meaningful difference.</p>
-          </div>
-        </div>
-      </div>
+    <section className="projects-section" id="projects-section">
+      <Projects />
     </section>
   );
 };
@@ -141,10 +144,10 @@ const Footer: React.FC = () => {
   return (
     <footer className="footer">
       <div className="footer-content">
-        <a href="/"><div className="footer-logo">FuturionAI</div></a>
+        <a href="/"><div className="footer-logo"/></a>
         <div className="footer-links">
           <a href="#services">Services</a>
-          <a href="#about">About</a>
+          <a href="#projects-section">Projects</a>
           <a href="#contact">Contact</a>
         </div>
         <div className="footer-social">
